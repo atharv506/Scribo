@@ -1,8 +1,22 @@
 import React, { useState } from 'react';
+import NoteForm from './NoteForm';
+import Card from './Card';
 
 const Home = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [notes, setNotes] = useState([]);
+  const handleClick = () => {
+
+    setShowForm(!showForm);
+  } 
+  
+    const handleAddNote = (note) => {
+    setNotes([note, ...notes]); // Add new note to list
+    setShowForm(false);         // Optionally hide form after submit
+  };
   return (
     <div className="flex flex-col min-h-screen bg-[#111827] px-10">
       {/* Header Section */}
@@ -16,7 +30,7 @@ const Home = () => {
       {/* Search Bar & Buttons */}
       <div className="flex flex-wrap items-center gap-4 mt-6 mb-5">
         {/* Search Bar */}
-        <form className="flex-grow max-w-5xl relative">
+        <form className="flex-grow max-w-6xl relative">
           <label htmlFor="default-search" className="sr-only">Search</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -63,11 +77,19 @@ const Home = () => {
         <button
           type="button"
             className="text-white font-bold bg-[#3B82F6] hover:bg-[#60A5FA] focus:ring-4 focus:ring-[#60A5FA]/50  rounded-lg text-sm px-5 py-2.5 focus:outline-none"
-        
+          onClick={handleClick}
         >
             + New Note
         </button>
+        <div className='flex flex-col items-center w-full '>
+          {showForm && <NoteForm onAddNote={handleAddNote} />}
+          </div>
       </div>
+    
+
+      {/* Render Notes */}
+      {notes.map((note, idx) => (
+        <Card key={idx} title={note.title} content={note.content} />))}
     </div>
   );
 };
